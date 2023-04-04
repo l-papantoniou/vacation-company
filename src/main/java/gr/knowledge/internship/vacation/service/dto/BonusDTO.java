@@ -7,39 +7,22 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
-public class EmployeeDTO implements Serializable {
+public class BonusDTO implements Serializable {
 
     Long id;
 
     @NotNull
     @Size(max = 255)
-    String name;
-
-    @NotNull
-    @Size(max = 255)
-    String surName;
-
-    @NotNull
-    @Size(max = 255)
-    String email;
-
-    @NotNull
-    LocalDate startDate;
-
-    @NotNull
-    Integer vacationDays;
-
-    @NotNull
-    Double salary;
-
-    @NotNull
-    @Size(max = 20)
-    String employmentType;
+    String amount;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CompanyDTO employeeCompany;
+    private CompanyDTO company;
+
+    @NotNull
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private EmployeeDTO employee;
+
 }

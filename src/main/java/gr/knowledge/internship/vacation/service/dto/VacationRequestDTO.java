@@ -10,36 +10,28 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-public class EmployeeDTO implements Serializable {
+public class VacationRequestDTO implements Serializable {
 
     Long id;
 
     @NotNull
     @Size(max = 255)
-    String name;
-
-    @NotNull
-    @Size(max = 255)
-    String surName;
-
-    @NotNull
-    @Size(max = 255)
-    String email;
-
-    @NotNull
     LocalDate startDate;
 
     @NotNull
-    Integer vacationDays;
+    @Size(max = 255)
+    LocalDate endDate;
 
     @NotNull
-    Double salary;
+    @Size(max = 255)
+    String status;
 
     @NotNull
-    @Size(max = 20)
-    String employmentType;
+    @Size(max = 255)
+    Integer days;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CompanyDTO employeeCompany;
+    private EmployeeDTO employee;
+
 }

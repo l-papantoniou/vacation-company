@@ -25,7 +25,7 @@ public class EmployeeProduct implements Serializable {
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
-    private Company company;
+    private Product product;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

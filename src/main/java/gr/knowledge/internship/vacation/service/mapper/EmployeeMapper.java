@@ -1,6 +1,8 @@
 package gr.knowledge.internship.vacation.service.mapper;
 
+import gr.knowledge.internship.vacation.domain.Company;
 import gr.knowledge.internship.vacation.domain.Employee;
+import gr.knowledge.internship.vacation.service.dto.CompanyDTO;
 import gr.knowledge.internship.vacation.service.dto.EmployeeDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

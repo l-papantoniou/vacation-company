@@ -1,9 +1,10 @@
 package gr.knowledge.internship.vacation.service.dto;
 
+import gr.knowledge.internship.vacation.domain.Company;
 import lombok.Data;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;

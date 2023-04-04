@@ -14,13 +14,13 @@ public class ProductDTO implements Serializable {
 
     @NotNull
     @Size(max = 255)
-    LocalDate name;
+    String name;
 
     @NotNull
     @Size(max = 255)
-    LocalDate description;
+    String description;
 
     @NotNull
     @Size(max = 255)
-    LocalDate barCode;
+    String barCode;
 }

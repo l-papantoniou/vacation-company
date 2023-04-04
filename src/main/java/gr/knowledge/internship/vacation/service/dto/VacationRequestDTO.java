@@ -27,7 +27,6 @@ public class VacationRequestDTO implements Serializable {
     String status;
 
     @NotNull
-    @Size(max = 255)
     Integer days;
 
     @NotNull

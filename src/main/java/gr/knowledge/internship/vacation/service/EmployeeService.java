@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,7 +22,7 @@ public class EmployeeService {
 
     private EmployeeMapper employeeMapper;
 
-    private static final String NotFoundExceptionMessage = "Not Found";
+    private static final String NOT_FOUND_EXCEPTION_MESSAGE = "Not Found";
 
 
     public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper) {
@@ -28,24 +30,73 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
+    /**
+     * Save an Employee
+     *
+     * @param employeeDTO the entity to save
+     * @return the persisted entity
+     */
     @Transactional
-    public EmployeeDTO save(EmployeeDTO employeeDTO){
-        log.debug("Request to save Company : {}",employeeDTO);
+    public EmployeeDTO save(EmployeeDTO employeeDTO) {
+        log.debug("Request to save Company : {}", employeeDTO);
         Employee employee = employeeMapper.toEntity(employeeDTO);
         employee = employeeRepository.save(employee);
         return employeeMapper.toDto(employee);
     }
 
+
+    /**
+     * Get an Employee by id
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
     @Transactional(readOnly = true)
-    public EmployeeDTO getById(Long id){
+    public EmployeeDTO getById(Long id) {
         EmployeeDTO result;
-        log.debug("Request to get Employee by id : {}",id);
+        log.debug("Request to get Employee by id : {}", id);
         Optional<Employee> employee = employeeRepository.findById(id);
-        if(employee.isPresent()){
+        if (employee.isPresent()) {
             result = employeeMapper.toDto(employee.get());
-        }else {
-            throw new NotFoundException(NotFoundExceptionMessage);
+        } else {
+            throw new NotFoundException(NOT_FOUND_EXCEPTION_MESSAGE);
         }
         return result;
+    }
+
+    /**
+     * Get all Employees
+     *
+     * @return a list of all Employees
+     */
+    @Transactional(readOnly = true)
+    public List<EmployeeDTO> getAll() {
+        List<EmployeeDTO> result = new ArrayList<>();
+        log.debug("Request to get all employees");
+        List<Employee> employeeList = employeeRepository.findAll();
+        if (!employeeList.isEmpty()) {
+            for (Employee employee : employeeList) {
+                result.add(employeeMapper.toDto(employee));
+            }
+        } else {
+            throw new NotFoundException(NOT_FOUND_EXCEPTION_MESSAGE);
+        }
+        return result;
+    }
+
+    /**
+     * Delete an Employee by id
+     *
+     * @param id
+     */
+    public void delete(Long id) {
+        log.debug("Request to delete Employee : {}", id);
+        employeeRepository.deleteById(id);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Boolean isExistingEmployeeId(Long id) {
+        return employeeRepository.findById(id).isPresent();
     }
 }

@@ -3,6 +3,7 @@ package gr.knowledge.internship.vacation.controller;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.VacationRequestService;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
+import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,15 @@ public class VacationRequestController {
         this.vacationRequestService = vacationRequestService;
     }
 
+    @PostMapping("/createVacationRequest")
+    public ResponseEntity<VacationRequestDTO> createVacationRequest(@RequestBody VacationRequestInputDTO vacationRequestInputDTO) {
+        log.debug("REST request to create a vacationRequest : {}", vacationRequestInputDTO);
+        VacationRequestDTO result = vacationRequestService.createVacationRequest(vacationRequestInputDTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
     @PostMapping("/vacationRequest")
-    public ResponseEntity<VacationRequestDTO> createVacationRequest(@RequestBody VacationRequestDTO vacationRequestDTO) {
+    public ResponseEntity<VacationRequestDTO> saveVacationRequest(@RequestBody VacationRequestDTO vacationRequestDTO) {
         log.debug("REST request to save a vacationRequest : {}", vacationRequestDTO);
         VacationRequestDTO result = vacationRequestService.save(vacationRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);

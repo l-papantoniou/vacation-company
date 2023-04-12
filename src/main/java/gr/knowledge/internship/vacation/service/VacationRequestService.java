@@ -1,13 +1,15 @@
 package gr.knowledge.internship.vacation.service;
 
-import gr.knowledge.internship.vacation.domain.Bonus;
-import gr.knowledge.internship.vacation.domain.Product;
+import gr.knowledge.internship.vacation.domain.Employee;
 import gr.knowledge.internship.vacation.domain.VacationRequest;
+import gr.knowledge.internship.vacation.enums.VacationRequestStatus;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
+import gr.knowledge.internship.vacation.repository.EmployeeRepository;
 import gr.knowledge.internship.vacation.repository.VacationRequestRepository;
-import gr.knowledge.internship.vacation.service.dto.BonusDTO;
-import gr.knowledge.internship.vacation.service.dto.ProductDTO;
+import gr.knowledge.internship.vacation.service.dto.EmployeeDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
+import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
+import gr.knowledge.internship.vacation.service.mapper.EmployeeMapper;
 import gr.knowledge.internship.vacation.service.mapper.VacationRequestMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -17,20 +19,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Service
 @Transactional
 @Log4j2
 public class VacationRequestService {
 
+    public static final String BAD_INPUT_FOR_VACATION_DAYS = "Bad Input for vacation Days";
+    public static final String VACATION_DAYS_REQUESTED_AND_VACATION_DAYS_AVAILABLE_ARE_NO_COMPATIBLE = "Vacation days requested and vacation days available are no compatible";
     private final VacationRequestRepository vacationRequestRepository;
-
     private final VacationRequestMapper vacationRequestMapper;
+
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
+
 
     private static final String NotFoundExceptionMessage = "Not Found";
 
-    public VacationRequestService(VacationRequestRepository vacationRequestRepository, VacationRequestMapper vacationRequestMapper) {
+    public VacationRequestService(VacationRequestRepository vacationRequestRepository, EmployeeRepository employeeRepository, VacationRequestMapper vacationRequestMapper, EmployeeMapper employeeMapper) {
         this.vacationRequestRepository = vacationRequestRepository;
+        this.employeeRepository = employeeRepository;
         this.vacationRequestMapper = vacationRequestMapper;
+        this.employeeMapper = employeeMapper;
     }
 
     /**
@@ -101,4 +112,49 @@ public class VacationRequestService {
         return vacationRequestRepository.findById(id).isPresent();
     }
 
+
+    /**
+     * VacationRequest method
+     *
+     * @param vacationRequestInputDTO the vacationRequest input
+     * @return the vacationRequestDTO
+     */
+    public VacationRequestDTO createVacationRequest(VacationRequestInputDTO vacationRequestInputDTO) {
+        log.debug("Request to get Vacation ");
+        EmployeeDTO employee;
+
+        // Perform validation on the vacationRequestInputDTO here, such as checking that the start date is before the end date
+        if (vacationRequestInputDTO.getStartDate().isAfter(vacationRequestInputDTO.getEndDate())) {
+            throw new RuntimeException(BAD_INPUT_FOR_VACATION_DAYS);
+        }
+        // Get the days for the vacation
+        long daysBetween = DAYS.between(vacationRequestInputDTO.getStartDate(), vacationRequestInputDTO.getEndDate());
+        int vacationDays = (int) daysBetween - vacationRequestInputDTO.getHolidays() + 1;
+
+        // Get the Employee by id
+        Optional<Employee> optionalEmployee = employeeRepository.findById(vacationRequestInputDTO.getEmployeeId());
+        if (optionalEmployee.isPresent()) {
+            employee = employeeMapper.toDto(optionalEmployee.get());
+        } else {
+            throw new NotFoundException(NotFoundExceptionMessage);
+        }
+
+        VacationRequestDTO vacationRequestDTO = new VacationRequestDTO();
+        // Validation check if employees vacations days are compatible with the requested vacation Days
+        if (vacationDays != 0 && employee.getVacationDays() >= vacationDays) {
+
+            // Set the properties of the vacationRequestDTO object based on the vacationRequestInputDTO object
+            vacationRequestDTO.setEmployee(employee);
+            vacationRequestDTO.setStatus(VacationRequestStatus.PENDING.getDescription());
+            vacationRequestDTO.setStartDate(vacationRequestInputDTO.getStartDate());
+            vacationRequestDTO.setEndDate(vacationRequestInputDTO.getEndDate());
+            vacationRequestDTO.setDays(vacationDays);
+
+        } else {
+            throw new RuntimeException(VACATION_DAYS_REQUESTED_AND_VACATION_DAYS_AVAILABLE_ARE_NO_COMPATIBLE);
+        }
+
+        // Save the vacationRequest to database. Finally, return the completed VacationRequestDTO object
+        return save(vacationRequestDTO);
+    }
 }

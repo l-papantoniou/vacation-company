@@ -17,7 +17,7 @@ import java.util.List;
 public class CompanyController {
     public static final String BAD_INPUT_FOR_UPDATE_COMPANY = "Bad input for update company";
     public static final String ID_NOT_FOUND = "Company with this id, not found";
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;

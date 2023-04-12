@@ -15,9 +15,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmployeeProductController {
 
-    public static final String ID_NOT_FOUND = "employeeProduct id not found";
-
-    private EmployeeProductService employeeProductService;
+    private final EmployeeProductService employeeProductService;
 
     public EmployeeProductController(EmployeeProductService employeeProductService) {
         this.employeeProductService = employeeProductService;
@@ -29,7 +27,6 @@ public class EmployeeProductController {
         EmployeeProductDTO result = employeeProductService.save(employeeProductDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
-
 
     @GetMapping("/employeeProduct/{id}")
     public ResponseEntity<EmployeeProductDTO> getProduct(@PathVariable Long id) {

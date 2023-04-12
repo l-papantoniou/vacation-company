@@ -24,11 +24,13 @@ public class EmployeeProduct implements Serializable {
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", referencedColumnName = "id")
-    private Product product;
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    private Employee employee;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private Employee employee;
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+
 }

@@ -19,7 +19,7 @@ public class ProductController {
 
     public static final String ID_NOT_FOUND = "Product id not found";
     public static final String BAD_INPUT_FOR_UPDATE_PRODUCT = "Bad input for update product";
-    private ProductService productService;
+    private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -62,7 +62,7 @@ public class ProductController {
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        log.debug("REST request to delete an Employee : {}", id);
+        log.debug("REST request to delete Employee : {}", id);
         productService.delete(id);
         return ResponseEntity
                 .noContent()

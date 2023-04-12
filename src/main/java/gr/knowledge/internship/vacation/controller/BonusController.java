@@ -18,7 +18,7 @@ import java.util.List;
 public class BonusController {
     public static final String ID_NOT_FOUND = "Bonus id not found";
     public static final String BAD_INPUT_FOR_UPDATE_BONUS = "Bad input for update bonus";
-    private BonusService bonusService;
+    private final BonusService bonusService;
 
     public BonusController(BonusService bonusService) {
         this.bonusService = bonusService;

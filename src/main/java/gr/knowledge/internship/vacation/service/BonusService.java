@@ -1,6 +1,7 @@
 package gr.knowledge.internship.vacation.service;
 
 import gr.knowledge.internship.vacation.domain.Bonus;
+import gr.knowledge.internship.vacation.enums.BonusRate;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.repository.BonusRepository;
 import gr.knowledge.internship.vacation.service.dto.BonusDTO;
@@ -78,6 +79,24 @@ public class BonusService {
             }
         }
         return result;
+    }
+
+    /**
+     * Custom method that returns the calculated bonus of an employee based on the season
+     *
+     * @param salary the employee's salary
+     * @param season the season of the bonus
+     * @return the calculated bonus
+     */
+    public Double calculateBonus(Double salary, String season) {
+
+        // Get the rate from the BonusRate enum based on the season
+        BonusRate bonusRate = BonusRate.getRateForSeason(season);
+
+        // Calculate the bonus amount by multiplying the salary by the rate
+        Double bonusAmount = salary * bonusRate.getRate();
+
+        return bonusAmount;
     }
 
 

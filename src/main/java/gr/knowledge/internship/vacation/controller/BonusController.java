@@ -61,5 +61,13 @@ public class BonusController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/calculateBonus")
+    public ResponseEntity<Double> calculateBonus(Double salary, String season) {
+        log.debug("Rest request to calculate the bonus based on salary and season rate");
+        Double result = bonusService.calculateBonus(salary, season);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
 
 }

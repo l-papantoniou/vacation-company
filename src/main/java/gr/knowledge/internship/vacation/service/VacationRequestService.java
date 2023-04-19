@@ -8,6 +8,7 @@ import gr.knowledge.internship.vacation.repository.EmployeeRepository;
 import gr.knowledge.internship.vacation.repository.VacationRequestRepository;
 import gr.knowledge.internship.vacation.service.dto.EmployeeDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
+import gr.knowledge.internship.vacation.service.dto.VacationRequestInfoDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
 import gr.knowledge.internship.vacation.service.mapper.EmployeeMapper;
 import gr.knowledge.internship.vacation.service.mapper.VacationRequestMapper;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -156,5 +158,25 @@ public class VacationRequestService {
 
         // Save the vacationRequest to database. Finally, return the completed VacationRequestDTO object
         return save(vacationRequestDTO);
+    }
+
+    /**
+     * Method  that returns The VacationRequests for a specific timeline for a company based on their status.
+     *
+     * @param vacationRequestInfoDTO the info for the vacationRequests
+     * @return the vacationREQUESTS
+     */
+    public List<VacationRequestDTO> getVacationRequestsByTimelineAndStatus(VacationRequestInfoDTO vacationRequestInfoDTO) {
+        log.debug("Request to get all vacationRequests of a company, on a specific timeline based on status");
+
+        //get the list of vacationRequests for a company of a specific timeline, based on status
+        List<VacationRequest> vacationRequestList = vacationRequestRepository.getVacationRequestsByTimelineAndStatus(
+                vacationRequestInfoDTO.getCompanyId(),
+                vacationRequestInfoDTO.getStartDate(),
+                vacationRequestInfoDTO.getEndDate(),
+                vacationRequestInfoDTO.getStatus());
+
+        return vacationRequestList.stream().map(vacationRequestMapper::toDto).collect(Collectors.toList());
+
     }
 }

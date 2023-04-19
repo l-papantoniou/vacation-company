@@ -3,6 +3,7 @@ package gr.knowledge.internship.vacation.controller;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.VacationRequestService;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
+import gr.knowledge.internship.vacation.service.dto.VacationRequestInfoDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -66,6 +67,13 @@ public class VacationRequestController {
     public ResponseEntity<VacationRequestDTO> getVacationRequest(@PathVariable Long id) {
         log.debug("Rest request to get  vacationRequest :{} ", id);
         VacationRequestDTO result = vacationRequestService.getById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/vacationRequestsCompany")
+    public ResponseEntity<List<VacationRequestDTO>> getVacationRequestsByTimelineAndStatus(@RequestBody VacationRequestInfoDTO vacationRequestInfoDTO) {
+        log.debug("Rest request to get all vacationRequests of a company based on status and timeline");
+        List<VacationRequestDTO> result = vacationRequestService.getVacationRequestsByTimelineAndStatus(vacationRequestInfoDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -1,6 +1,5 @@
 package gr.knowledge.internship.vacation.controller;
 
-import gr.knowledge.internship.vacation.domain.VacationRequest;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.VacationRequestService;
 import gr.knowledge.internship.vacation.service.dto.ProcessVacationRequestDTO;

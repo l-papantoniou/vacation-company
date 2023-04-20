@@ -6,10 +6,7 @@ import gr.knowledge.internship.vacation.enums.VacationRequestStatus;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.repository.EmployeeRepository;
 import gr.knowledge.internship.vacation.repository.VacationRequestRepository;
-import gr.knowledge.internship.vacation.service.dto.EmployeeDTO;
-import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
-import gr.knowledge.internship.vacation.service.dto.VacationRequestInfoDTO;
-import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
+import gr.knowledge.internship.vacation.service.dto.*;
 import gr.knowledge.internship.vacation.service.mapper.EmployeeMapper;
 import gr.knowledge.internship.vacation.service.mapper.VacationRequestMapper;
 import lombok.extern.log4j.Log4j2;
@@ -38,6 +35,8 @@ public class VacationRequestService {
 
 
     private static final String NotFoundExceptionMessage = "Not Found";
+    private static final String NotFoundStatusExceptionMessage = "Not Found status";
+    private static final String NotFoundVacationExceptionMessage = "Not Found Vacation";
 
     public VacationRequestService(VacationRequestRepository vacationRequestRepository, EmployeeRepository employeeRepository, VacationRequestMapper vacationRequestMapper, EmployeeMapper employeeMapper) {
         this.vacationRequestRepository = vacationRequestRepository;
@@ -61,7 +60,6 @@ public class VacationRequestService {
     }
 
     /**
-     * \
      * Get a vacationRequest by id
      *
      * @param id the id of the entity
@@ -116,7 +114,7 @@ public class VacationRequestService {
 
 
     /**
-     * VacationRequest method
+     * create VacationRequest method
      *
      * @param vacationRequestInputDTO the vacationRequest input
      * @return the vacationRequestDTO
@@ -166,7 +164,7 @@ public class VacationRequestService {
      * @param vacationRequestInfoDTO the info for the vacationRequests
      * @return the vacationREQUESTS
      */
-    public List<VacationRequestDTO> getVacationRequestsByTimelineAndStatus(VacationRequestInfoDTO vacationRequestInfoDTO) {
+    public List<VacationRequestDTO> getVacationRequestsByTimeline(VacationRequestInfoDTO vacationRequestInfoDTO) {
         log.debug("Request to get all vacationRequests of a company, on a specific timeline based on status");
 
         //get the list of vacationRequests for a company of a specific timeline, based on status
@@ -178,5 +176,49 @@ public class VacationRequestService {
 
         return vacationRequestList.stream().map(vacationRequestMapper::toDto).collect(Collectors.toList());
 
+    }
+
+    /**
+     * Method that returns an updated VacationRequest
+     *
+     * @param processVacationRequestDTO the processVacationRequest
+     * @return the updated vacationRequest
+     */
+    public VacationRequestDTO processVacationRequest(ProcessVacationRequestDTO processVacationRequestDTO) {
+        log.debug("Request to process a vacationRequest, accept/reject it");
+
+        VacationRequest vacationRequest;
+
+        // get the VacationRequest based on vacationId (check if vacationId is valid)
+        Optional<VacationRequest> optionalVacationRequest = vacationRequestRepository.findById(processVacationRequestDTO.getVacationId());
+        if (optionalVacationRequest.isPresent()) {
+            vacationRequest = optionalVacationRequest.get();
+        } else {
+            throw new NotFoundException(NotFoundVacationExceptionMessage);
+        }
+
+        // get the employee that applied for the vacationRequest
+        Employee employee = vacationRequest.getEmployee();
+
+        // logic based on the status of the vacationRequest
+        if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.ACCEPTED.description)) {
+
+            //calculate the new vacationDays
+            Integer newVacationDays = employee.getVacationDays() - vacationRequest.getDays();
+
+            //update the employees vacationDays
+            employee.setVacationDays(newVacationDays);
+
+            //update the vacationRequest status
+            vacationRequest.setStatus(VacationRequestStatus.APPROVED.getDescription());
+
+        } else if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.REJECTED.description)) {
+            //update the vacationRequest status
+            vacationRequest.setStatus(VacationRequestStatus.REJECTED.description);
+        } else {
+            throw new NotFoundException(NotFoundStatusExceptionMessage);
+        }
+
+        return vacationRequestMapper.toDto(vacationRequest);
     }
 }

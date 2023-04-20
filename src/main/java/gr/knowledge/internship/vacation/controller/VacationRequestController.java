@@ -1,7 +1,9 @@
 package gr.knowledge.internship.vacation.controller;
 
+import gr.knowledge.internship.vacation.domain.VacationRequest;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.VacationRequestService;
+import gr.knowledge.internship.vacation.service.dto.ProcessVacationRequestDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestInfoDTO;
 import gr.knowledge.internship.vacation.service.dto.VacationRequestInputDTO;
@@ -28,6 +30,7 @@ public class VacationRequestController {
         this.vacationRequestService = vacationRequestService;
     }
 
+    //endpoint for creating a new vacationRequest
     @PostMapping("/createVacationRequest")
     public ResponseEntity<VacationRequestDTO> createVacationRequest(@RequestBody VacationRequestInputDTO vacationRequestInputDTO) {
         log.debug("REST request to create a vacationRequest : {}", vacationRequestInputDTO);
@@ -39,6 +42,14 @@ public class VacationRequestController {
     public ResponseEntity<VacationRequestDTO> saveVacationRequest(@RequestBody VacationRequestDTO vacationRequestDTO) {
         log.debug("REST request to save a vacationRequest : {}", vacationRequestDTO);
         VacationRequestDTO result = vacationRequestService.save(vacationRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    //endpoint for processing qa vacationRequest
+    @PostMapping("/processVacationRequest")
+    public ResponseEntity<VacationRequestDTO> processVacationRequest(@RequestBody ProcessVacationRequestDTO processVacationRequestDTO) {
+        log.debug("REST request to procees a vacationRequest : {}", processVacationRequestDTO);
+        VacationRequestDTO result = vacationRequestService.processVacationRequest(processVacationRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -73,7 +84,7 @@ public class VacationRequestController {
     @GetMapping("/vacationRequestsCompany")
     public ResponseEntity<List<VacationRequestDTO>> getVacationRequestsByTimelineAndStatus(@RequestBody VacationRequestInfoDTO vacationRequestInfoDTO) {
         log.debug("Rest request to get all vacationRequests of a company based on status and timeline");
-        List<VacationRequestDTO> result = vacationRequestService.getVacationRequestsByTimelineAndStatus(vacationRequestInfoDTO);
+        List<VacationRequestDTO> result = vacationRequestService.getVacationRequestsByTimeline(vacationRequestInfoDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

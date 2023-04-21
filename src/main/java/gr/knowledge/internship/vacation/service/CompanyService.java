@@ -20,10 +20,10 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-
     private final CompanyMapper companyMapper;
 
     private static final String NOT_FOUND_EXCEPTION_MESSAGE = "Not Found";
+    private static final String NOT_FOUND_COMPANY_EXCEPTION_MESSAGE = "No Company with the given Id";
 
 
     public CompanyService(CompanyRepository companyRepository, CompanyMapper companyMapper) {
@@ -85,10 +85,25 @@ public class CompanyService {
     }
 
 
+    /**
+     * A method that returns a Double amount
+     *
+     * @param companyId the id of the company
+     * @return the amount of the monthly expenses
+     */
+    public Double calculateMonthlyExpenses(Long companyId) {
+        log.debug("Request to calculate the monthly expenses of a company : {}", companyId);
+        Double expenses;
+        if (isExistingCompanyId(companyId)) {
+            expenses = companyRepository.calculateExpensesByCompanyId(companyId);
+        } else {
+            throw new NotFoundException(NOT_FOUND_COMPANY_EXCEPTION_MESSAGE);
+        }
+        return expenses;
+    }
+
     @Transactional(readOnly = true)
     public Boolean isExistingCompanyId(Long id) {
         return companyRepository.findById(id).isPresent();
     }
-
-
 }

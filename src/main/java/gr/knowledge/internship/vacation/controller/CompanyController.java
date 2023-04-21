@@ -4,7 +4,6 @@ import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.CompanyService;
 import gr.knowledge.internship.vacation.service.dto.CompanyDTO;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +54,14 @@ public class CompanyController {
     public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable Long id) {
         log.debug("Rest request to get Company by id :{}", id);
         CompanyDTO result = companyService.getById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //endpoint for calculating a company's monthly expenses
+    @GetMapping("/companyExpenses/{companyId}")
+    public ResponseEntity<Double> calculateCompanyExpenses(@PathVariable Long companyId) {
+        log.debug("Rest request to get a Company's expenses by id :{}", companyId);
+        Double result = companyService.calculateMonthlyExpenses(companyId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

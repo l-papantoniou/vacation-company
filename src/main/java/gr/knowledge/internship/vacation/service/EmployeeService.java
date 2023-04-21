@@ -18,9 +18,9 @@ import java.util.Optional;
 @Log4j2
 public class EmployeeService {
 
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
-    private EmployeeMapper employeeMapper;
+    private final EmployeeMapper employeeMapper;
 
     private static final String NOT_FOUND_EXCEPTION_MESSAGE = "Not Found";
 
@@ -87,7 +87,7 @@ public class EmployeeService {
     /**
      * Delete an Employee by id
      *
-     * @param id
+     * @param id the employee id
      */
     public void delete(Long id) {
         log.debug("Request to delete Employee : {}", id);

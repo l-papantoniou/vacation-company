@@ -15,7 +15,7 @@ public class BonusDTO implements Serializable {
 
     @NotNull
     @Size(max = 255)
-    String amount;
+    Double amount;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

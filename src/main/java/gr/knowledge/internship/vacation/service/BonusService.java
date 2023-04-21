@@ -1,9 +1,12 @@
 package gr.knowledge.internship.vacation.service;
 
 import gr.knowledge.internship.vacation.domain.Bonus;
+import gr.knowledge.internship.vacation.domain.Company;
+import gr.knowledge.internship.vacation.domain.Employee;
 import gr.knowledge.internship.vacation.enums.BonusRate;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.repository.BonusRepository;
+import gr.knowledge.internship.vacation.repository.CompanyRepository;
 import gr.knowledge.internship.vacation.service.dto.BonusDTO;
 import gr.knowledge.internship.vacation.service.mapper.BonusMapper;
 import lombok.extern.log4j.Log4j2;
@@ -23,11 +26,14 @@ public class BonusService {
 
     private final BonusMapper bonusMapper;
 
+    private final CompanyService companyService;
     private static final String NOT_FOUND_EXCEPTION_MESSAGE = "Not Found";
 
-    public BonusService(BonusRepository bonusRepository, BonusMapper bonusMapper) {
+    public BonusService(BonusRepository bonusRepository, BonusMapper bonusMapper, CompanyService companyService,
+                        CompanyRepository companyRepository) {
         this.bonusRepository = bonusRepository;
         this.bonusMapper = bonusMapper;
+        this.companyService = companyService;
     }
 
     /**
@@ -99,6 +105,30 @@ public class BonusService {
         return bonusAmount;
     }
 
+    /**
+     * Method to create Bonuses for each employee of a specific company
+     *
+     * @param companyId the id of the company
+     * @param season    the season for the bonus
+     * @return a list of bonuses
+     */
+    public List<Bonus> createCompanyBonus(Long companyId, String season) {
+        log.debug("Request to create Bonus for every employee of a company ");
+        List<Bonus> bonusList = new ArrayList<>();
+        // get all employees of a specific company
+        List<Employee> employeeList = companyService.getCompanyEmployees(companyId);
+
+        // calculate their bonuses and add them to a list
+        for (Employee employee : employeeList) {
+            Bonus bonus = new Bonus();
+            bonus.setAmount(calculateBonus(employee.getSalary(), season));
+            bonus.setEmployee(employee);
+            bonus.setCompany(employee.getEmployeeCompany());
+            bonusList.add(bonus);
+        }
+        // save all bonuses to db
+        return bonusRepository.saveAll(bonusList);
+    }
 
     @Transactional(readOnly = true)
     public Boolean isExistingBonusId(Long id) {

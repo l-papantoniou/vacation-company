@@ -1,10 +1,9 @@
 package gr.knowledge.internship.vacation.controller;
 
+import gr.knowledge.internship.vacation.domain.Bonus;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.BonusService;
 import gr.knowledge.internship.vacation.service.dto.BonusDTO;
-import gr.knowledge.internship.vacation.service.dto.CompanyDTO;
-import gr.knowledge.internship.vacation.service.dto.EmployeeDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +64,14 @@ public class BonusController {
     public ResponseEntity<Double> calculateBonus(Double salary, String season) {
         log.debug("Rest request to calculate the bonus based on salary and season rate");
         Double result = bonusService.calculateBonus(salary, season);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/bonusByCompany")
+    public ResponseEntity<List<Bonus>> createCompanyBonus(@RequestParam Long companyId, @RequestParam String season) {
+        log.debug("Rest request to create bonuses for all employees of a company ");
+        List<Bonus> result = bonusService.createCompanyBonus(companyId, season);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }

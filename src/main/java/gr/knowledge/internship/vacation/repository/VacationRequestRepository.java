@@ -14,10 +14,12 @@ import java.util.List;
 public interface VacationRequestRepository extends JpaRepository<VacationRequest, Long>, JpaSpecificationExecutor<VacationRequest> {
 
     @Query(value = "SELECT vacationRequest  FROM VacationRequest vacationRequest " +
-            "INNER JOIN  Company company ON company.id =:companyId " +
-            "WHERE (vacationRequest.startDate <= :endDate OR vacationRequest.endDate >= :startDate) " +
+            " INNER JOIN  Employee employee ON employee.id = vacationRequest.employee.id" +
+            " INNER JOIN Company  company ON employee.employeeCompany.id = company.id" +
+            " WHERE (vacationRequest.startDate >= :startDate OR vacationRequest.endDate <= :endDate) " +
             "AND (vacationRequest.endDate > :startDate AND vacationRequest.startDate < :endDate) " +
-            "AND vacationRequest.status =:status ")
+            "AND vacationRequest.status =:status  " +
+            "AND company.id =:companyId" )
     List<VacationRequest> getVacationRequestsByTimelineAndStatus(@Param("companyId") Long companyId,
                                                                  @Param("startDate") LocalDate startDate,
                                                                  @Param("endDate") LocalDate endDate,

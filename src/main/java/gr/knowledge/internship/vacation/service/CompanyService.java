@@ -1,6 +1,7 @@
 package gr.knowledge.internship.vacation.service;
 
 import gr.knowledge.internship.vacation.domain.Company;
+import gr.knowledge.internship.vacation.domain.Employee;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.repository.CompanyRepository;
 import gr.knowledge.internship.vacation.service.dto.CompanyDTO;
@@ -100,6 +101,11 @@ public class CompanyService {
             throw new NotFoundException(NOT_FOUND_COMPANY_EXCEPTION_MESSAGE);
         }
         return expenses;
+    }
+
+    public List<Employee> getCompanyEmployees(Long companyId) {
+        log.debug("Request to get all employees of a company based on companyId: {}", companyId);
+        return companyRepository.getEmployeesByCompanyId(companyId);
     }
 
     @Transactional(readOnly = true)

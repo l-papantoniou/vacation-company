@@ -2,6 +2,7 @@ package gr.knowledge.internship.vacation.service;
 
 
 import gr.knowledge.internship.vacation.domain.EmployeeProduct;
+import gr.knowledge.internship.vacation.domain.Product;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.repository.EmployeeProductRepository;
 import gr.knowledge.internship.vacation.service.dto.EmployeeProductDTO;
@@ -10,9 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -79,6 +78,34 @@ public class EmployeeProductService {
             }
         }
         return result;
+    }
+
+
+    /**
+     * Method that returns the products of a company
+     *
+     * @param companyId the id of the company
+     * @return a map of product owners and products
+     */
+    public Map<String, List<Product>> getProductsByCompany(Long companyId) {
+        log.debug("Request to get all Products of a Company :{}", companyId);
+        // get all products alongside  their owners
+        List<Object[]> employeeProductList = employeeProductRepository.getProductByCompany(companyId);
+
+        Map<String, List<Product>> employeeProductMap = new HashMap<>();
+        for (Object[] arr : employeeProductList) {
+            String employeeName = (String) arr[0];
+            Product product = (Product) arr[1];
+
+            //if key does not exist in map create a new key pair value for the map
+            if (!employeeProductMap.containsKey(employeeName)) {
+                employeeProductMap.put(employeeName, new ArrayList<>());
+            }
+            //if key exists get List<Products> related to that key (the employeeName)
+            employeeProductMap.get(employeeName).add(product);
+        }
+
+        return employeeProductMap;
     }
 
     /**

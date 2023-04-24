@@ -2,7 +2,6 @@ package gr.knowledge.internship.vacation.controller;
 
 import gr.knowledge.internship.vacation.exception.NotFoundException;
 import gr.knowledge.internship.vacation.service.ProductService;
-import gr.knowledge.internship.vacation.service.dto.BonusDTO;
 import gr.knowledge.internship.vacation.service.dto.ProductDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -59,6 +58,8 @@ public class ProductController {
         List<ProductDTO> result = productService.getAll();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

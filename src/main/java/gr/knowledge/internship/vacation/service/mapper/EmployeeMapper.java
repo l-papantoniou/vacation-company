@@ -8,11 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeMapper extends ModelMapper {
 
-    public EmployeeDTO toDto(Employee employee){
+    public EmployeeDTO toDto(Employee employee) {
         return this.map(employee, EmployeeDTO.class);
     }
 
-    public Employee toEntity(EmployeeDTO employeeDTO){
+    public Employee toEntity(EmployeeDTO employeeDTO) {
         return this.map(employeeDTO, Employee.class);
     }
+
 }

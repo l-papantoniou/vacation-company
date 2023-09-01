@@ -1,29 +1,46 @@
 package gr.knowledge.internship.vacation.service.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class VacationRequestInfoDTO implements Serializable {
 
-    Long id;
+    private Long id;
 
     @NotNull
-    Long companyId;
-
-    @NotNull
-    @Size(max = 255)
-    LocalDate startDate;
+    private Long companyId;
 
     @NotNull
     @Size(max = 255)
-    LocalDate endDate;
+    private LocalDate startDate;
 
     @NotNull
-    String status;
+    @Size(max = 255)
+    private LocalDate endDate;
 
+    @NotNull
+    private String status;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VacationRequestInfoDTO that = (VacationRequestInfoDTO) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

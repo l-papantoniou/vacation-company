@@ -1,6 +1,6 @@
 package gr.knowledge.internship.vacation.service.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -8,29 +8,46 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class VacationRequestDTO implements Serializable {
 
-    Long id;
+    private Long id;
 
     @NotNull
     @Size(max = 255)
-    LocalDate startDate;
+    private LocalDate startDate;
 
     @NotNull
     @Size(max = 255)
-    LocalDate endDate;
+    private LocalDate endDate;
 
     @NotNull
     @Size(max = 255)
-    String status;
+    private String status;
 
     @NotNull
-    Integer days;
+    private Integer days;
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private EmployeeDTO employee;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VacationRequestDTO that = (VacationRequestDTO) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

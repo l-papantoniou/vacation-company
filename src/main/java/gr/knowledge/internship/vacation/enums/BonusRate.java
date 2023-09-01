@@ -6,6 +6,14 @@ public enum BonusRate {
     SPRING("Spring", 0.6),
     SUMMER("Summer", 0.7);
 
+    public static final String INVALID_SEASON = "Invalid season: ";
+
+    private static final BonusRate[] VALUES;
+
+    static {
+        VALUES = values();
+    }
+
     private final String season;
     private final Double rate;
 
@@ -23,11 +31,12 @@ public enum BonusRate {
     }
 
     public static BonusRate getRateForSeason(String season) {
-        for (BonusRate bonusRate : values()) {
+        // Use cached VALUES instead of values() to prevent array allocation.
+        for (BonusRate bonusRate : VALUES) {
             if (bonusRate.getSeason().equalsIgnoreCase(season)) {
                 return bonusRate;
             }
         }
-        throw new IllegalArgumentException("Invalid season: " + season);
+        throw new IllegalArgumentException(INVALID_SEASON + season);
     }
 }

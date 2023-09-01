@@ -201,7 +201,7 @@ public class VacationRequestService {
         Employee employee = vacationRequest.getEmployee();
 
         // logic based on the status of the vacationRequest
-        if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.ACCEPTED.description)) {
+        if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.ACCEPTED.getDescription())) {
 
             //calculate the new vacationDays
             Integer newVacationDays = employee.getVacationDays() - vacationRequest.getDays();
@@ -212,9 +212,9 @@ public class VacationRequestService {
             //update the vacationRequest status
             vacationRequest.setStatus(VacationRequestStatus.APPROVED.getDescription());
 
-        } else if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.REJECTED.description)) {
+        } else if (processVacationRequestDTO.getStatus().equals(VacationRequestStatus.REJECTED.getDescription())) {
             //update the vacationRequest status
-            vacationRequest.setStatus(VacationRequestStatus.REJECTED.description);
+            vacationRequest.setStatus(VacationRequestStatus.REJECTED.getDescription());
         } else {
             throw new NotFoundException(NotFoundStatusExceptionMessage);
         }

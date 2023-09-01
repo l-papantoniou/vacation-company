@@ -95,7 +95,7 @@ public class CompanyService {
     public Double calculateMonthlyExpenses(Long companyId) {
         log.debug("Request to calculate the monthly expenses of a company : {}", companyId);
         Double expenses;
-        if (isExistingCompanyId(companyId)) {
+        if (Boolean.TRUE.equals(isExistingCompanyId(companyId))) {
             expenses = companyRepository.calculateExpensesByCompanyId(companyId);
         } else {
             throw new NotFoundException(NOT_FOUND_COMPANY_EXCEPTION_MESSAGE);

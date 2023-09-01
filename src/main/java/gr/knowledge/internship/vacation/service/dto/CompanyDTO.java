@@ -13,6 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 public class CompanyDTO implements Serializable {
+
     private Long id;
 
     @NotNull

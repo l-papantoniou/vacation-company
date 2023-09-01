@@ -1,7 +1,6 @@
 package gr.knowledge.internship.vacation.service;
 
 import gr.knowledge.internship.vacation.domain.Bonus;
-import gr.knowledge.internship.vacation.domain.Company;
 import gr.knowledge.internship.vacation.domain.Employee;
 import gr.knowledge.internship.vacation.enums.BonusRate;
 import gr.knowledge.internship.vacation.exception.NotFoundException;
@@ -29,8 +28,7 @@ public class BonusService {
     private final CompanyService companyService;
     private static final String NOT_FOUND_EXCEPTION_MESSAGE = "Not Found";
 
-    public BonusService(BonusRepository bonusRepository, BonusMapper bonusMapper, CompanyService companyService,
-                        CompanyRepository companyRepository) {
+    public BonusService(BonusRepository bonusRepository, BonusMapper bonusMapper, CompanyService companyService) {
         this.bonusRepository = bonusRepository;
         this.bonusMapper = bonusMapper;
         this.companyService = companyService;
@@ -100,9 +98,8 @@ public class BonusService {
         BonusRate bonusRate = BonusRate.getRateForSeason(season);
 
         // Calculate the bonus amount by multiplying the salary by the rate
-        Double bonusAmount = salary * bonusRate.getRate();
 
-        return bonusAmount;
+        return salary * bonusRate.getRate();
     }
 
     /**

@@ -122,7 +122,6 @@ public class EmployeeService {
      *
      * @param filePath the path of the csvFile
      * @return the employeeDTOlist to save
-     * @throws IOException
      */
     @Transactional
     public List<EmployeeDTO> parseCSVFile(String filePath) throws IOException {

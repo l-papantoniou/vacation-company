@@ -2,7 +2,9 @@ package gr.knowledge.internship.vacation.controller;
 
 import gr.knowledge.internship.vacation.domain.Product;
 import gr.knowledge.internship.vacation.service.EmployeeProductService;
+import gr.knowledge.internship.vacation.service.dto.EmployeeProductCount;
 import gr.knowledge.internship.vacation.service.dto.EmployeeProductDTO;
+import gr.knowledge.internship.vacation.service.dto.ExtendedProductDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,13 @@ public class EmployeeProductController {
     public ResponseEntity<List<EmployeeProductDTO>> getAllEmployeeProducts() {
         log.debug("Rest request to get all EmployeeProducts");
         List<EmployeeProductDTO> result = employeeProductService.getAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/productsFrequency")
+    public ResponseEntity<Map<Long, ExtendedProductDTO>> getProductsFrequency() {
+        log.debug("Rest request to get all EmployeeProducts");
+        Map<Long, ExtendedProductDTO> result = employeeProductService.getProductsFrequency();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

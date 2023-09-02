@@ -1,6 +1,7 @@
 package gr.knowledge.internship.vacation.repository;
 
 import gr.knowledge.internship.vacation.domain.EmployeeProduct;
+import gr.knowledge.internship.vacation.service.dto.EmployeeProductCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,9 @@ public interface EmployeeProductRepository extends JpaRepository<EmployeeProduct
     List<Object[]> getProductByCompany(@Param("companyId") Long companyId);
 
 
+    @Query("SELECT NEW gr.knowledge.internship.vacation.service.dto.EmployeeProductCount" +
+            "(employeeProduct.product, COUNT(DISTINCT employeeProduct.employee)) " +
+            " FROM EmployeeProduct employeeProduct" +
+            " GROUP BY employeeProduct.product")
+    List<EmployeeProductCount> getProductsAndEmployeeCount();
 }
